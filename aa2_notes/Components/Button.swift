@@ -11,10 +11,10 @@ import UIKit
 class Button: UIView {
     
     var label: Label?
-    typealias OnClick = () -> ()
-    var onClick: OnClick = {}
+    typealias OnClick = (Button) -> ()
+    var onClick: OnClick = {_ in }
     
-    init(_ label: Label? = nil, _ onClick: @escaping OnClick = {}) {
+    init(_ label: Label? = nil, _ onClick: @escaping OnClick = {_ in }) {
         super.init(frame: .zero)
         
         self.EnableConstraints()
@@ -37,7 +37,7 @@ class Button: UIView {
     }
     
     @objc func OnTap() {
-        self.onClick()
+        self.onClick(self)
     }
     
 }

@@ -123,6 +123,30 @@ extension UIView {
         return self
     }
     
+    @discardableResult func SetHeight(_ height: CGFloat) -> UIView {
+        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        return self
+    }
+    @discardableResult func SetHeight(_ heightConstraint: NSLayoutAnchor<NSLayoutDimension>, constant: CGFloat = 0.0) -> UIView {
+        self.heightAnchor.constraint(equalTo: heightConstraint, constant: constant).isActive = true
+        return self
+    }
+    
+    @discardableResult func SetWidth(_ width: CGFloat) -> UIView {
+        self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        return self
+    }
+    @discardableResult func SetWidth(_ widthConstraint: NSLayoutAnchor<NSLayoutDimension>, constant: CGFloat = 0.0) -> UIView {
+        self.widthAnchor.constraint(equalTo: widthConstraint, constant: constant).isActive = true
+        return self
+    }
+    
+    @discardableResult func CenterXTo(_ centerXConstraint: NSLayoutAnchor<NSLayoutXAxisAnchor>, constant: CGFloat = 0.0) -> UIView {
+        self.centerXAnchor.constraint(equalTo: centerXConstraint, constant: constant).isActive = true
+        return self
+    }
+    
+    
     //MARK: Relatives
     
     //MARK: Helpers
