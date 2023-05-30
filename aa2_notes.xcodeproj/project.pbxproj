@@ -23,6 +23,8 @@
 		B0CB5F502A17EBA100A14CAF /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB5F4F2A17EBA100A14CAF /* Button.swift */; };
 		B0CB5F522A17F05900A14CAF /* UserDefaults+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB5F512A17F05900A14CAF /* UserDefaults+Storage.swift */; };
 		B0CB5F552A17F43300A14CAF /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB5F542A17F43300A14CAF /* Note.swift */; };
+		EFB0F2AE2A26033600C6B500 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB0F2AD2A26033600C6B500 /* TextView.swift */; };
+		EFB0F2B02A260DEC00C6B500 /* UIView+Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB0F2AF2A260DEC00C6B500 /* UIView+Corners.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,8 @@
 		B0CB5F4F2A17EBA100A14CAF /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		B0CB5F512A17F05900A14CAF /* UserDefaults+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Storage.swift"; sourceTree = "<group>"; };
 		B0CB5F542A17F43300A14CAF /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		EFB0F2AD2A26033600C6B500 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		EFB0F2AF2A260DEC00C6B500 /* UIView+Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Corners.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 				B0CB5F472A17E82600A14CAF /* String+Translation.swift */,
 				B0CB5F512A17F05900A14CAF /* UserDefaults+Storage.swift */,
 				B0CB5F402A17E4A800A14CAF /* UIFont+Resize.swift */,
+				EFB0F2AF2A260DEC00C6B500 /* UIView+Corners.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -106,6 +111,7 @@
 				B0CB5F3B2A17E3D400A14CAF /* VC.swift */,
 				B0CB5F4F2A17EBA100A14CAF /* Button.swift */,
 				B0CB5F382A17E2C100A14CAF /* Label.swift */,
+				EFB0F2AD2A26033600C6B500 /* TextView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -229,6 +235,7 @@
 				B0CB5F412A17E4A800A14CAF /* UIFont+Resize.swift in Sources */,
 				B0CB5F112A17C22600A14CAF /* ViewController.swift in Sources */,
 				B0CB5F482A17E82600A14CAF /* String+Translation.swift in Sources */,
+				EFB0F2AE2A26033600C6B500 /* TextView.swift in Sources */,
 				B0CB5F0D2A17C22600A14CAF /* AppDelegate.swift in Sources */,
 				B0CB5F392A17E2C100A14CAF /* Label.swift in Sources */,
 				B0CB5F552A17F43300A14CAF /* Note.swift in Sources */,
@@ -237,6 +244,7 @@
 				B0CB5F212A17CA1B00A14CAF /* UIView+Constraints.swift in Sources */,
 				B0CB5F522A17F05900A14CAF /* UserDefaults+Storage.swift in Sources */,
 				B0CB5F3C2A17E3D400A14CAF /* VC.swift in Sources */,
+				EFB0F2B02A260DEC00C6B500 /* UIView+Corners.swift in Sources */,
 				B0CB5F442A17E51600A14CAF /* StartVC.swift in Sources */,
 				B0CB5F502A17EBA100A14CAF /* Button.swift in Sources */,
 			);

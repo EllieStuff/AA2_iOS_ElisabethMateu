@@ -36,5 +36,8 @@ struct NamedUIColor: Codable {
     static var BgPrincipal: NamedUIColor {
         return NamedUIColor(name: "BgPrincipal")
     }
+    static var Separator: NamedUIColor {
+        return NamedUIColor(name: "Separator")
+    }
 }
 
