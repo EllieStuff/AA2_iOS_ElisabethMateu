@@ -38,7 +38,7 @@ class StartVC: VC {
             .AlingBotTo(titleView, padding: 20.0)
             .AlingRightTo(titleView, padding: 20.0)
         
-        //
+        ////
         
         
         // Notes View
