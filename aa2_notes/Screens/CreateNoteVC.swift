@@ -10,7 +10,13 @@ import UIKit
 
 class CreateNoteVC: VC {
     
-    let buttonsWidth: CGFloat = 100
+    let buttonsWidth: CGFloat = 90
+    let titleWidth: CGFloat = 120
+    
+    let editableTitle = TextView("Title")
+    let editableText = TextView("Click to edit")
+    
+    var previousVC = StartVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,15 +32,23 @@ class CreateNoteVC: VC {
         //.SetHeight(120)
         titleView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
-        let title = Label("NotesTitle".Translated)
-        title.font = UIFont.boldSystemFont(ofSize: 20)
-        titleView.addSubview(title)
-        title.EnableConstraints()
-            .AlingBotTo(titleView, padding: 20)
+        editableTitle.text = "NotesTitleEditable".Translated
+        editableTitle.textAlignment = .center
+        editableTitle.backgroundColor = .clear
+        editableTitle.font = UIFont.boldSystemFont(ofSize: 17)
+        editableTitle.isEditable = true
+        editableTitle.isSelectable = true
+        editableTitle.isUserInteractionEnabled = true
+        titleView.addSubview(editableTitle)
+        editableTitle.EnableConstraints()
+            .AlingBotTo(titleView, padding: .padding)
+            .AlingTopTo(titleView, padding: .padding)
             .CenterXTo(titleView.centerXAnchor)
+            .SetWidth(titleWidth)
         
         let saveBttn = Button(Label("SaveBttn".Translated, style: .caption1)) { button in
-            
+            self.SaveNote()
+            self.dismiss(animated: true)
         }
         saveBttn.backgroundColor = .green
         titleView.addSubview(saveBttn)
@@ -71,13 +85,22 @@ class CreateNoteVC: VC {
             .AlignTopToBot(titleView)
             .AlingBotTo(self.view, safeArea: false)
         
-        let editableText = TextView("...")
+        
         editableText.textAlignment = .left
         editableText.font = UIFont.systemFont(ofSize: 15.0)
+        editableText.isEditable = true
+        editableText.isSelectable = true
+        editableText.isUserInteractionEnabled = true
         createNoteView.addSubview(editableText)
-        editableText.PinTo(other: createNoteView)
+        editableText.PinTo(other: createNoteView, padding: .padding2)
         //editableText.AlingTopTo(titleView, 100)
         
         
+    }
+    
+    
+    func SaveNote(){
+        previousVC.AddNote(noteTitle: editableTitle.text, noteContent: editableText.text)
+        previousVC.SaveNewNote(note: previousVC.table.notes[previousVC.table.notes.count - 1])
     }
 }

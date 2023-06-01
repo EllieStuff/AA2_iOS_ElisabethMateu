@@ -11,6 +11,10 @@ class StartVC: VC {
     
     static let CreateNoteView: CreateNoteVC = CreateNoteVC()
     
+    let table = Table()
+    
+    static var OnEditMode = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +38,7 @@ class StartVC: VC {
         
         let editBttn = Button(Label("EditBttn".Translated, style: .caption1)) { button in
             debugPrint("Edit Pressed")
+            self.table.EnableEditMode(!StartVC.OnEditMode)
         }
         titleView.addSubview(editBttn)
         editBttn.EnableConstraints()
@@ -53,13 +58,14 @@ class StartVC: VC {
             .AlignTopToBot(titleView)
             .AlingBotTo(self.view, safeArea: false)
         
-        let table = Table()
-        notesView.addSubview(table.view)
-        table.view.PinTo(other: notesView)
+        
+        notesView.addSubview(table)
+        table.PinTo(other: notesView)
         
         
         let addNoteBttn = Button(Label("+")) { button in
             debugPrint("+ Pressed")
+            StartVC.CreateNoteView.previousVC = self
             StartVC.CreateNoteView.modalPresentationStyle = .overFullScreen
             self.present(StartVC.CreateNoteView, animated: true)
         }
@@ -75,6 +81,10 @@ class StartVC: VC {
         
         
         //
+        
+        UserDefaults.standard.synchronize()
+        //LoadNotes()
+        
         
         /*let bttnWithLabel = Button(Label("HelloWorld".Translated)) {
             debugPrint("Pressed")
@@ -99,11 +109,34 @@ class StartVC: VC {
         UserDefaults.standard.Save(data: note, key: "Note1")
         */
     }
-
+    
+    
+    func AddNote(noteTitle: String, noteContent: String) {
+        self.table.AddCell(noteTitle: noteTitle, noteContent: noteContent)
+    }
+    
+    
+    /*func LoadNotes() {
+        let notesAmount = UserDefaults.standard.integer(forKey: "NotesAmount")
+        for currNoteId in 0 ... notesAmount {
+            let note: Note = UserDefaults.standard.get<Note>(Note.Type, key: "NoteId_" + String(currNoteId))
+            table.AddCell(noteTitle: note.title, noteContent: note.description)
+        }
+    }*/
+    
+    func SaveNewNote(note: Note) {
+        UserDefaults.standard.set(table.notes.count, forKey: "NotesAmount")
+        UserDefaults.standard.Save(data: note, key: "NoteId_" + String(table.notes.count - 1))
+    }
+    
+    func SaveNotesIdxChange(note1: Note, note2: Note, note1Id: Int, note2Id: Int) {
+        UserDefaults.standard.Save(data: note1, key: "NoteId_" + String(note2Id))
+        UserDefaults.standard.Save(data: note2, key: "NoteId_" + String(note1Id))
+    }
 
 }
 
-class Table: VC, UITableViewDelegate, UITableViewDataSource {
+class Table: UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var notes: [Note] = [
         Note(title: "Note1", description: "djksf", color: NamedUIColor(name: "Purple"), type: .Work),
@@ -111,11 +144,11 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
     ]
     let table = UITableView()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init() {
+        super.init(frame: .zero, style: .grouped)
         
-        self.view.addSubview(table)
-        table.PinTo(other: self.view)
+        self.addSubview(table)
+        table.PinTo(other: self)
         
         table.delegate = self
         table.dataSource = self
@@ -125,8 +158,12 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
         table.reloadData()
     }
     
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        debugPrint("Notes Count: " + String(notes.count))
         return notes.count
     }
     
@@ -140,8 +177,6 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = NamedUIColor.BgPrincipal.Color
         cell.cellSeparator.backgroundColor = NamedUIColor.Separator.Color
         
-        //Cosas
-        
         return cell
     }
     
@@ -151,15 +186,27 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        debugPrint("note clicked 1")
-        if let notesOptions = storyboard.instantiateViewController(withIdentifier: NoteCell.Id) as? NoteCell {
-            debugPrint("note clicked 2")
-            //HeroDetailVC.CurrHero = heroesLoaded[indexPath.row]
-            //heroDetailVC.modalPresentationStyle = .overFullScreen
-            
-            //self.present(heroDetailVC, animated: true)
+        debugPrint("Note " + String(indexPath.row) + " clicked")
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, indexPath: IndexPath) {
+        if(editingStyle == .delete) {
+            notes.remove(at: indexPath.row)
+            table.reloadData()
         }
+    }
+    
+    func EnableEditMode(_ enable: Bool) {
+        table.setEditing(enable, animated: true)
+        StartVC.OnEditMode = enable
+    }
+    
+    
+    func AddCell(noteTitle: String, noteContent: String) {
+        let newNote = Note(title: noteTitle, description: noteContent, color: NamedUIColor(name: "White"), type: .Shop)
+        notes.append(newNote)
+        debugPrint(notes)
+        self.table.reloadData()
     }
 }
 
