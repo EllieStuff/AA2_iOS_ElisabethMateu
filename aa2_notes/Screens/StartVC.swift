@@ -9,6 +9,8 @@ import UIKit
 
 class StartVC: VC {
     
+    static let CreateNoteView: CreateNoteVC = CreateNoteVC()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,15 +25,15 @@ class StartVC: VC {
             //.SetHeight(120)
         titleView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
-        let title: UITextField = UITextField()
-        title.text = Label("NotesTitle".Translated).text
+        let title = Label("NotesTitle".Translated)
+        title.font = UIFont.boldSystemFont(ofSize: 20)
         titleView.addSubview(title)
         title.EnableConstraints()
             .AlingBotTo(titleView, padding: 20)
             .CenterXTo(titleView.centerXAnchor)
         
-        let editBttn = Button(Label("EditBttn", style: .caption1)) { button in
-            
+        let editBttn = Button(Label("EditBttn".Translated, style: .caption1)) { button in
+            debugPrint("Edit Pressed")
         }
         titleView.addSubview(editBttn)
         editBttn.EnableConstraints()
@@ -45,12 +47,11 @@ class StartVC: VC {
         let notesView = UIView()
         notesView.backgroundColor = .white
         self.view.addSubview(notesView)
-        //notesView.PinTo(other: self.view)
         notesView.EnableConstraints()
             .AlingRightTo(self.view)
             .AlingLeftTo(self.view)
-            .AlingTopTo(titleView, padding: 120) //ToDo: Poner que se puede poner si alinear arriba o abajo de view con booleana
-            .AlingBotTo(self.view)
+            .AlignTopToBot(titleView)
+            .AlingBotTo(self.view, safeArea: false)
         
         let table = Table()
         notesView.addSubview(table.view)
@@ -59,6 +60,8 @@ class StartVC: VC {
         
         let addNoteBttn = Button(Label("+")) { button in
             debugPrint("+ Pressed")
+            StartVC.CreateNoteView.modalPresentationStyle = .overFullScreen
+            self.present(StartVC.CreateNoteView, animated: true)
         }
         notesView.addSubview(addNoteBttn)
         addNoteBttn.backgroundColor = .green
@@ -146,6 +149,7 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
         return NoteCell.CellSize
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         debugPrint("note clicked 1")
@@ -159,18 +163,6 @@ class Table: VC, UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
-/*protocol TableViewCell: UITableView {
-    var Id: String { get }
-    
-}
-
-class MyCell: UITableView, TableViewCell {
-    var Id: String {
-        return "MyCell"
-    }
-    
-}*/
 
 class NoteCell: UITableViewCell {
     

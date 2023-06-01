@@ -9,3 +9,6 @@
 "HelloWorld" = "Hello World";
 "NotesTitle" = "Notes";
 "EditBttn" = "Edit";
+"SaveBttn" = "Save";
+"CancelBttn" = "Cancel";
+"DeleteBttn" = "Delete";
