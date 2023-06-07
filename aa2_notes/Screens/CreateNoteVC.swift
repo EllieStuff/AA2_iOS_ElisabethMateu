@@ -106,6 +106,7 @@ class CreateNoteVC: VC {
             .AlingBotTo(self.view, safeArea: false)
         
         
+        editableText.text = "ClickToEdit".Translated
         editableText.textAlignment = .left
         editableText.font = UIFont.systemFont(ofSize: 15.0)
         editableText.isEditable = true

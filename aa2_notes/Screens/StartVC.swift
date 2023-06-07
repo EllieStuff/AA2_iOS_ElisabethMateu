@@ -86,29 +86,6 @@ class StartVC: VC {
         
         LoadNotes()
         
-        
-        /*let bttnWithLabel = Button(Label("HelloWorld".Translated)) {
-            debugPrint("Pressed")
-        }
-        bttnWithLabel.backgroundColor = .blue
-        bttnWithLabel.label?.backgroundColor = .lightGray
-        
-        otherView.addSubview(bttnWithLabel)
-        bttnWithLabel.EnableConstraints()
-            .AlingLeftTo(otherView)
-            .AlingTopTo(otherView)
-         
-        
-        UserDefaults.standard.set("Cosas", forKey: "Cosas_Key")
-        debugPrint(UserDefaults.standard.value(forKey: "Cosas_Key"))
-        
-        UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "AppOpenTimes") + 1, forKey: "AppOpenTimes")
-        UserDefaults.standard.synchronize()
-        debugPrint(UserDefaults.standard.integer(forKey: "AppOpenTimes"))
-        
-        var note = Note(title: "Test title", description: "TestDescription", color: NamedUIColor(name: "PrimaryColor"), type: .Work)
-        UserDefaults.standard.Save(data: note, key: "Note1")
-        */
     }
     
     
