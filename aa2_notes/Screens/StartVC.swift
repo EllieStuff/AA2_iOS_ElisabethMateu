@@ -9,7 +9,8 @@ import UIKit
 
 class StartVC: VC {
     
-    static let CreateNoteView: CreateNoteVC = CreateNoteVC()
+    //static let CreateNoteView: CreateNoteVC = CreateNoteVC()
+    static var StartVCRef: StartVC?
     
     let table = Table()
     
@@ -17,6 +18,8 @@ class StartVC: VC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        StartVC.StartVCRef = self
         
         // Title View
         let titleView = UIView()
@@ -65,9 +68,7 @@ class StartVC: VC {
         
         let addNoteBttn = Button(Label("+")) { button in
             debugPrint("+ Pressed")
-            StartVC.CreateNoteView.previousVC = self
-            StartVC.CreateNoteView.modalPresentationStyle = .overFullScreen
-            self.present(StartVC.CreateNoteView, animated: true)
+            self.LoadCreateNoteVC(.CreateMode)
         }
         notesView.addSubview(addNoteBttn)
         addNoteBttn.backgroundColor = .green
@@ -82,8 +83,8 @@ class StartVC: VC {
         
         //
         
-        UserDefaults.standard.synchronize()
-        //LoadNotes()
+        
+        LoadNotes()
         
         
         /*let bttnWithLabel = Button(Label("HelloWorld".Translated)) {
@@ -111,151 +112,57 @@ class StartVC: VC {
     }
     
     
+    func ModifyNote(noteTitle: String, noteContent: String, noteIdx: Int) -> Note {
+        table.ModifyCell(noteTitle: noteTitle, noteContent: noteContent, noteIdx: noteIdx)
+        return table.notes[noteIdx]
+    }
     func AddNote(noteTitle: String, noteContent: String) {
         self.table.AddCell(noteTitle: noteTitle, noteContent: noteContent)
     }
     
     
-    /*func LoadNotes() {
+    func LoadNotes() {
         let notesAmount = UserDefaults.standard.integer(forKey: "NotesAmount")
         for currNoteId in 0 ... notesAmount {
-            let note: Note = UserDefaults.standard.get<Note>(Note.Type, key: "NoteId_" + String(currNoteId))
+            guard let note = UserDefaults.standard.get(Note.self, key: "NoteId_" + String(currNoteId)) else { return }
             table.AddCell(noteTitle: note.title, noteContent: note.description)
         }
-    }*/
+        UserDefaults.standard.synchronize()
+    }
     
     func SaveNewNote(note: Note) {
         UserDefaults.standard.set(table.notes.count, forKey: "NotesAmount")
         UserDefaults.standard.Save(data: note, key: "NoteId_" + String(table.notes.count - 1))
+        UserDefaults.standard.synchronize()
+    }
+    func SaveExistingNote(note: Note, noteIdx: Int) {
+        UserDefaults.standard.Save(data: note, key: "NoteId_" + String(noteIdx))
+        UserDefaults.standard.synchronize()
     }
     
     func SaveNotesIdxChange(note1: Note, note2: Note, note1Id: Int, note2Id: Int) {
         UserDefaults.standard.Save(data: note1, key: "NoteId_" + String(note2Id))
         UserDefaults.standard.Save(data: note2, key: "NoteId_" + String(note1Id))
-    }
-
-}
-
-class Table: UITableView, UITableViewDelegate, UITableViewDataSource {
-    
-    var notes: [Note] = [
-        Note(title: "Note1", description: "djksf", color: NamedUIColor(name: "Purple"), type: .Work),
-        Note(title: "Note2", description: "djkfdbvsf djkfdbvsf djkfdbvsf djkfdbvsf", color: NamedUIColor(name: "White"), type: .Shop)
-    ]
-    let table = UITableView()
-    
-    init() {
-        super.init(frame: .zero, style: .grouped)
-        
-        self.addSubview(table)
-        table.PinTo(other: self)
-        
-        table.delegate = self
-        table.dataSource = self
-        
-        table.register(NoteCell.self, forCellReuseIdentifier: NoteCell.Id)
-        
-        table.reloadData()
+        UserDefaults.standard.synchronize()
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        debugPrint("Notes Count: " + String(notes.count))
-        return notes.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = table.dequeueReusableCell(withIdentifier: NoteCell.Id) as? NoteCell else {
-            return UITableViewCell()
+    func DeleteSavedData(){
+        let notesAmount = UserDefaults.standard.integer(forKey: "NotesAmount")
+        for currNoteId in 0 ... notesAmount {
+            UserDefaults.standard.removeObject(forKey: "NoteId_" + String(currNoteId))
         }
-        
-        cell.cellTitle.text = self.notes[indexPath.row].title
-        cell.cellDescription.text = self.notes[indexPath.row].description
-        cell.backgroundColor = NamedUIColor.BgPrincipal.Color
-        cell.cellSeparator.backgroundColor = NamedUIColor.Separator.Color
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return NoteCell.CellSize
+        UserDefaults.standard.set(0, forKey: "NotesAmount")
     }
     
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        debugPrint("Note " + String(indexPath.row) + " clicked")
+    @discardableResult func LoadCreateNoteVC(_ viewMode: CreateNoteVC.Mode) -> CreateNoteVC {
+        let createNoteVC = CreateNoteVC()
+        createNoteVC.ViewMode = viewMode
+        createNoteVC.modalPresentationStyle = .overFullScreen
+        self.present(createNoteVC, animated: true)
+        return createNoteVC
     }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, indexPath: IndexPath) {
-        if(editingStyle == .delete) {
-            notes.remove(at: indexPath.row)
-            table.reloadData()
-        }
-    }
-    
-    func EnableEditMode(_ enable: Bool) {
-        table.setEditing(enable, animated: true)
-        StartVC.OnEditMode = enable
-    }
-    
-    
-    func AddCell(noteTitle: String, noteContent: String) {
-        let newNote = Note(title: noteTitle, description: noteContent, color: NamedUIColor(name: "White"), type: .Shop)
-        notes.append(newNote)
-        debugPrint(notes)
-        self.table.reloadData()
-    }
+
 }
 
 
-class NoteCell: UITableViewCell {
-    
-    lazy var cellTitle: Label = {
-        let label = Label("Title", style: .title1)
-        self.addSubview(label)
-        label
-            .SetHeight(.padding4)
-            .AlingLeftTo(self, padding: .padding4)
-            .AlingTopTo(self, padding: .paddingLow)
-        
-        return label
-    }()
-    
-    lazy var cellSeparator: UIView = {
-        let separator = UIView()
-        self.addSubview(separator)
-        separator.EnableConstraints()
-            .SetHeight(.paddingLow)
-            .AlingTopTo(cellTitle, padding: .padding4)
-            .AlingRightTo(self, padding: .padding4)
-            .AlingLeftTo(self, padding: .padding4)
-        //separator.backgroundColor = NamedUIColor.Separator.Color
-        //separator.backgroundColor = .black
-        
-        return separator
-    }()
-    
-    lazy var cellDescription: TextView = {
-        let description = TextView("Description")
-        description.textAlignment = .left
-        description.font = UIFont.systemFont(ofSize: 15.0)
-        self.addSubview(description)
-        description.EnableConstraints()
-            .AlingTopTo(cellSeparator, padding: .padding)
-            .AlingBotTo(self, padding: .padding)
-            .AlingRightTo(self, padding: .padding4)
-            .AlingLeftTo(self, padding: .padding4)
-        
-        return description
-    }()
-    
-    
-    static var Id: String {
-        return "NoteCell"
-    }
-    static let CellSize:CGFloat = 120
-    
-}

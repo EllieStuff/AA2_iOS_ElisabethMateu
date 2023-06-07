@@ -10,13 +10,22 @@ import UIKit
 
 class CreateNoteVC: VC {
     
+    enum Mode {
+        case ViewMode
+        case EditMode
+        case CreateMode
+    }
+    
     let buttonsWidth: CGFloat = 90
     let titleWidth: CGFloat = 120
     
     let editableTitle = TextView("Title")
     let editableText = TextView("Click to edit")
+    var noteIdx = 0
     
-    var previousVC = StartVC()
+    var ViewMode = Mode.ViewMode
+    
+    //var previousVC = StartVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,26 +55,37 @@ class CreateNoteVC: VC {
             .CenterXTo(titleView.centerXAnchor)
             .SetWidth(titleWidth)
         
-        let saveBttn = Button(Label("SaveBttn".Translated, style: .caption1)) { button in
-            self.SaveNote()
-            self.dismiss(animated: true)
+        
+        var leftBtn = Button()
+        if(ViewMode == .EditMode) {
+            leftBtn = Button(Label("SaveBttn".Translated, style: .caption1)) { button in
+                self.SaveEditedNote()
+                self.dismiss(animated: true)
+            }
         }
-        saveBttn.backgroundColor = .green
-        titleView.addSubview(saveBttn)
-        saveBttn.cornerRadius = 10
-        saveBttn.EnableConstraints()
+        else if(ViewMode == .CreateMode) {
+            leftBtn = Button(Label("SaveBttn".Translated, style: .caption1)) { button in
+                self.SaveNewNote()
+                self.dismiss(animated: true)
+            }
+        }
+        leftBtn.backgroundColor = .green
+        titleView.addSubview(leftBtn)
+        leftBtn.cornerRadius = 10
+        leftBtn.EnableConstraints()
             .AlingBotTo(titleView, padding: .padding)
             .AlingLeftTo(titleView, padding: .padding)
             .AlingTopTo(titleView, padding: .padding)
             .SetWidth(buttonsWidth)
         
-        let cancelBttn = Button(Label("CancelBttn".Translated, style: .caption1)) { button in
+        
+        let rightBtn = Button(Label("CancelBttn".Translated, style: .caption1)) { button in
             self.dismiss(animated: true)
         }
-        cancelBttn.backgroundColor = .red
-        cancelBttn.cornerRadius = 10
-        titleView.addSubview(cancelBttn)
-        cancelBttn.EnableConstraints()
+        rightBtn.backgroundColor = .red
+        rightBtn.cornerRadius = 10
+        titleView.addSubview(rightBtn)
+        rightBtn.EnableConstraints()
             .AlingBotTo(titleView, padding: .padding)
             .AlingRightTo(titleView, padding: .padding)
             .AlingTopTo(titleView, padding: .padding)
@@ -98,9 +118,15 @@ class CreateNoteVC: VC {
         
     }
     
-    
-    func SaveNote(){
-        previousVC.AddNote(noteTitle: editableTitle.text, noteContent: editableText.text)
-        previousVC.SaveNewNote(note: previousVC.table.notes[previousVC.table.notes.count - 1])
+    func SaveEditedNote() {
+        guard let startVC = StartVC.StartVCRef else { return }
+        let editedNote = startVC.ModifyNote(noteTitle: editableTitle.text, noteContent: editableText.text, noteIdx: noteIdx)
+        startVC.SaveExistingNote(note: editedNote, noteIdx: noteIdx)
+    }
+    func SaveNewNote() {
+        guard let startVC = StartVC.StartVCRef else { return }
+        startVC.AddNote(noteTitle: editableTitle.text, noteContent: editableText.text)
+        let noteIdx: Int = startVC.table.notes.count - 1
+        startVC.SaveNewNote(note: startVC.table.notes[noteIdx])
     }
 }
