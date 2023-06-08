@@ -10,15 +10,9 @@ import UIKit
 
 struct Note: Codable {
     
-    enum NoteType: Codable {
-        case Shop
-        case Work
-    }
-    
     var title: String
     var description: String
     var color: NamedUIColor
-    var type: NoteType
     
 }
 

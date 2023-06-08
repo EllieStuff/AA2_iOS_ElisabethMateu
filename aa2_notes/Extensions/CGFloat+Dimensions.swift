@@ -21,5 +21,11 @@ extension CGFloat {
     static var padding2: CGFloat { get { return .padding * 2 } }
     static var padding4: CGFloat { get { return .padding * 4 } }
     
+    static var buttonsWidth: CGFloat = 90
+    static var titleWidth: CGFloat = 120
+    static var titleViewHeight: CGFloat = 120
+    static var floatingBtnSize: CGFloat = 40
+    static var cornerRadius: CGFloat = 10
+    
 }
 

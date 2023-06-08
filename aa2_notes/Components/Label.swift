@@ -13,7 +13,7 @@ class Label: UILabel {
     init(_ text: String = "", style: UIFont.TextStyle = .body) {
         super.init(frame: .zero)
         
-        self.EnableConstraints() //Opcional
+        self.EnableConstraints()
         
         self.text = text
         

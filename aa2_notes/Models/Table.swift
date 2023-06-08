@@ -11,10 +11,6 @@ import UIKit
 class Table: UITableView, UITableViewDelegate, UITableViewDataSource {
     
     var notes: [Note] = []
-    /*var notes: [Note] = [
-        Note(title: "Note1", description: "djksf", color: NamedUIColor(name: "Purple"), type: .Work),
-        Note(title: "Note2", description: "djkfdbvsf djkfdbvsf djkfdbvsf djkfdbvsf", color: NamedUIColor(name: "White"), type: .Shop)
-    ]*/
     let table = UITableView()
     
     init() {
@@ -61,31 +57,27 @@ class Table: UITableView, UITableViewDelegate, UITableViewDataSource {
         let movedNote = notes[sourceIndexPath.item]
         notes.remove(at: sourceIndexPath.item)
         notes.insert(movedNote, at: destinationIndexPath.item)
+        UserDefaults.SaveNotesIdxChange(note1: notes[destinationIndexPath.row], note2: notes[sourceIndexPath.row], note1NewId: destinationIndexPath.row, note2NewId: sourceIndexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debugPrint("Note " + String(indexPath.row) + " clicked")
         guard let startVC = StartVC.StartVCRef else { return }
-        let createNoteVC = startVC.LoadCreateNoteVC(.EditMode)
+        let createNoteVC = startVC.LoadCreateNoteVC(.ViewMode)
         createNoteVC.editableTitle.text = notes[indexPath.row].title
         createNoteVC.editableText.text = notes[indexPath.row].description
-        createNoteVC.noteIdx = indexPath.row
+        createNoteVC.noteIdx = indexPath
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if(editingStyle == .delete) {
             debugPrint("Deleting...")
-            notes.remove(at: indexPath.item)
-            table.deleteRows(at: [indexPath], with: .automatic)
-            //table.reloadData()
-        }
-        else {
-            debugPrint("Editing...")
+            DeleteCell(indexPath: indexPath)
         }
     }
     
+    
     func EnableEditMode(_ enable: Bool) {
-        //table.isEditing = true
         super.setEditing(enable, animated: true)
         table.setEditing(enable, animated: true)
         StartVC.OnEditMode = enable
@@ -98,10 +90,14 @@ class Table: UITableView, UITableViewDelegate, UITableViewDataSource {
         self.table.reloadData()
     }
     func AddCell(noteTitle: String, noteContent: String) {
-        let newNote = Note(title: noteTitle, description: noteContent, color: NamedUIColor(name: "White"), type: .Shop)
+        let newNote = Note(title: noteTitle, description: noteContent, color: NamedUIColor(name: "White"))
         notes.append(newNote)
-        //debugPrint(notes)
         self.table.reloadData()
+    }
+    func DeleteCell(indexPath: IndexPath) {
+        notes.remove(at: indexPath.row)
+        table.deleteRows(at: [indexPath], with: .fade)
+        UserDefaults.RefresSavedNotesIndexes(notes: notes, startDeletionNoteIdx: indexPath.row)
     }
 }
 

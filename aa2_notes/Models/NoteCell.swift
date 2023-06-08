@@ -15,8 +15,8 @@ class NoteCell: UITableViewCell {
         self.addSubview(label)
         label
             .SetHeight(.padding4)
-            .AlingLeftTo(self, padding: .padding4)
-            .AlingTopTo(self, padding: .paddingLow)
+            .AlingLeftTo(self.contentView, padding: .padding4)
+            .AlingTopTo(self.contentView, padding: .paddingLow)
         
         return label
     }()
@@ -27,10 +27,8 @@ class NoteCell: UITableViewCell {
         separator.EnableConstraints()
             .SetHeight(.paddingLow)
             .AlingTopTo(cellTitle, padding: .padding4)
-            .AlingRightTo(self, padding: .padding4)
-            .AlingLeftTo(self, padding: .padding4)
-        //separator.backgroundColor = NamedUIColor.Separator.Color
-        //separator.backgroundColor = .black
+            .AlingRightTo(self.contentView, padding: .padding4)
+            .AlingLeftTo(self.contentView, padding: .padding4)
         
         return separator
     }()
@@ -42,9 +40,9 @@ class NoteCell: UITableViewCell {
         self.addSubview(description)
         description.EnableConstraints()
             .AlingTopTo(cellSeparator, padding: .padding)
-            .AlingBotTo(self, padding: .padding)
-            .AlingRightTo(self, padding: .padding4)
-            .AlingLeftTo(self, padding: .padding4)
+            .AlingBotTo(self.contentView, padding: .padding)
+            .AlingRightTo(self.contentView, padding: .padding4)
+            .AlingLeftTo(self.contentView, padding: .padding4)
         
         return description
     }()
